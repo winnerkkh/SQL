@@ -144,13 +144,13 @@ insert into board(title, content, writer)
 select * from board;
   
 #replay
-#no, epno, content, writer, regdate
+#no, repno, content, writer, regdate
 #int, int, varchar(50), varchar(20), datetime
 #key - 자동중가
 
 create table reply(
 	no int primary key auto_increment,
-    epno int,
+    repno int,
     content varchar(50),
     writer varchar(20),
     regdate datetime default current_timestamp #현재시간 저장
@@ -159,13 +159,14 @@ create table reply(
 
 desc reply;
 
-insert into reply (epno, content, writer) values(1, '1번글에 대한 댓글하나', 'user03');
-insert into reply (epno, content, writer)values(1, '1번글에 대한 댓글하나', 'user02');
-insert into reply (epno, content, writer) values(2, '2번글에 대한 댓글하나', 'user05');
-insert into reply (epno, content, writer) values(2, '1번글에 대한 댓글하나', 'user04');
-insert into reply (epno, content, writer) values(3, '3번글에 대한 댓글하나', 'user03');
+insert into reply (repno, content, writer) values(1, '1번글에 대한 댓글하나', 'user03');
+insert into reply (repno, content, writer) values(1, '1번글에 대한 댓글하나', 'user02');
+insert into reply (repno, content, writer) values(2, '2번글에 대한 댓글하나', 'user05');
+insert into reply (repno, content, writer) values(2, '1번글에 대한 댓글하나', 'user04');
+insert into reply (repno, content, writer) values(3, '3번글에 대한 댓글하나', 'user03');
 
 select * from reply;
+
 
 #favor
 #no, boardno, count
@@ -215,3 +216,50 @@ update board
 		where no>=4 and no<=6;
         
 select * from board;
+
+
+# board테이블, reply테이블, favor테이블
+select board.no, title, board.content, board.writer, readcount, reply.content, count
+	from board,
+		 reply,
+         favor
+	where board.no = reply.repno #join equa조인(서로 연관된 칼럼끼리) 
+	  and board.no = favor.boardno;
+        
+# board의 글번호, 내용, 작성자, 좋아요 갯수를 출력;
+select board.no as'글번호', board.content as'내용', board.writer as '작성자',  # as'별칭' => 
+	   favor.count as '좋아요' 
+	from board, 
+		 favor 
+		where board.no = favor.boardno; #join(equal)
+        
+
+# board의 글번호, 댓글번호, 좋아요 출력
+select board.no as'글번호', reply.no as '댓글번호', favor.count as '좋아요'
+	from board,
+		 reply,
+		 favor
+	  where board.no = reply.repno
+		and board.no = favor.boardno;
+        
+#테이블 테이타 오름차순 정렬/내림차순 정렬
+select no, title, content
+	from board	
+		order by no; #특정 칼럼을 기준으로 정렬 order by 칼럼명 - default 오름차순
+        
+select no, title, content
+    from board
+		order by no desc; #내림차순 정렬
+
+
+# 정렬 칼럼을 두개이상 정렬가능        
+select board.no, title, favor.count #2
+	from board,
+		 favor
+	  where board.no = favor.boardno #1
+        order by board.no, count desc; #3
+        
+
+
+        
+        
