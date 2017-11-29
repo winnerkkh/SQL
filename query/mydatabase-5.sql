@@ -15,15 +15,25 @@ select goods.id '상품코드',
        qty '재고'
   from goods,
        maker,
-	   stock
+	   stockmakergoodsmaker_makercd
  where goods.id = stock.goods_id
    and goods.maker_makercd = maker.makercd
  ;
  
- 
+ select * from stock;
 
 
+insert into goods(id, name, price, category, maker_makercd)
+			values(1007,'휴대용방석', 5000,2,7001);
 
+insert into goods(id, name, price, category, maker_makercd)
+			values(1008,'바람막이', 30000,2,7001);
 
+select * from board;
 
+update board
+set readcount = 10,
+favor = 5
+where no =20;
 
+select no title, readcount, favor from board where no = 27
