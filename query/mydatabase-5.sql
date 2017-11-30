@@ -35,5 +35,6 @@ update board
 set readcount = 10,
 favor = 5
 where no =20;
+delete from board where no = 20;
 
 select no title, readcount, favor from board where no = 27
