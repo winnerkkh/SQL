@@ -67,18 +67,31 @@ select getStockInfo(1001);
 
 #####################
 
-select goods.name name,
-	   stock.qty
-  from goods,
-		(select 
-	      sum(qty) qty
-		   from stock
-            where goods+id ='1001'
-			 group by goods_id) stock
-             where goods_id;
-           )
+ select goods.name name,
+         stock.qty
+   from goods,
+        (select goods_id id,
+                sum(qty) qty
+           from stock
+		  where goods_id ='1001'
+          group by goods_id) stock
+ where goods.id=stock.id
+ 
            
-           
-   select concat(getName(1001), getStockQty(1001));
-   select concat(getName(id),getStockQty(id))
-	from goods;
+delimiter //
+ create function getStockQty(goodsNo int)
+ returns varchar(30)
+ BEGIN
+    return(select sum(qty)
+             from stock 
+			where goods_id =goodsNo);
+ END
+ //
+ delimiter ;
+ 
+ select concat(getName(1001), getStockQty(1001));
+ 
+ select concat(getName(id),getStockQty(id)) 
+   from goods;
+ 
+ 
