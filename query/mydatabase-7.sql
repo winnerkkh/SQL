@@ -38,5 +38,5 @@
        
        select * from address;
        
-      delete from reply where no >1;
+      delete from address where no >1;
         
